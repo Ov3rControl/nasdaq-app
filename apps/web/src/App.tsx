@@ -1,35 +1,37 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useEffect, useState } from "react";
+import { SplashScreen } from "./components/splash-screen";
+import { ExploreScreen } from "./components/explore-screen";
+import { PerformanceMonitor } from "./components/performance-monitor";
+import { Toaster } from "./components/ui/toaster";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [showSplash, setShowSplash] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowSplash(false);
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (showSplash) {
+    return (
+      <>
+        <SplashScreen />
+        <PerformanceMonitor />
+        <Toaster />
+      </>
+    );
+  }
 
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <ExploreScreen />
+      <PerformanceMonitor />
+      <Toaster />
     </>
-  )
+  );
 }
 
-export default App
+export default App;

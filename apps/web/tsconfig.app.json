@@ -16,6 +16,16 @@
     "noEmit": true,
     "jsx": "react-jsx",
 
+    /* Path mapping */
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"],
+      "@repo/core": ["../../packages/core"],
+      "@repo/api": ["../../packages/api"],
+      "@repo/data": ["../../packages/data"],
+      "@repo/storage": ["../../packages/storage"]
+    },
+
     /* Linting */
     "strict": true,
     "noUnusedLocals": true,

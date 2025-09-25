@@ -1,68 +1,375 @@
+@import 'tailwindcss';
+
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+  /* Retro dashboard palette with soft edges and bold black borders */
+  --background: #fffdf0;
+  --foreground: #1a1a1a;
+  --card: #ffffff;
+  --card-foreground: #1a1a1a;
+  --popover: #ffffff;
+  --popover-foreground: #1a1a1a;
+  --primary: #ffd23f; /* Retro yellow */
+  --primary-foreground: #1a1a1a;
+  --secondary: #fff9d6;
+  --secondary-foreground: #1a1a1a;
+  --muted: #f6f6f6;
+  --muted-foreground: #6b7280;
+  --accent: #ffd23f;
+  --accent-foreground: #1a1a1a;
+  --destructive: #ef4444;
+  --destructive-foreground: #ffffff;
+  --border: #1a1a1a; /* Bold black lines */
+  --input: #ffffff;
+  --ring: #1a1a1a;
+  --chart-1: #ffd23f;
+  --chart-2: #10b981;
+  --chart-3: #3b82f6;
+  --chart-4: #8b5cf6;
+  --chart-5: #f59e0b;
+  --radius: 0.75rem; /* soft edges */
+}
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+.dark {
+  /* Retro dark mode */
+  --background: #1a1a1a;
+  --foreground: #fffbe6;
+  --card: #2b2b2b;
+  --card-foreground: #fffbe6;
+  --popover: #2b2b2b;
+  --popover-foreground: #fffbe6;
+  --primary: #ffd23f;
+  --primary-foreground: #1a1a1a;
+  --secondary: #3a3a3a;
+  --secondary-foreground: #fffbe6;
+  --muted: #3a3a3a;
+  --muted-foreground: #c7c7c7;
+  --accent: #ffd23f;
+  --accent-foreground: #1a1a1a;
+  --destructive: #ef4444;
+  --destructive-foreground: #ffffff;
+  --border: #fffbe6;
+  --input: #2b2b2b;
+  --ring: #ffd23f;
+  --chart-1: #ffd23f;
+  --chart-2: #34d399;
+  --chart-3: #60a5fa;
+  --chart-4: #a78bfa;
+  --chart-5: #f59e0b;
+}
 
+@theme {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --radius-sm: 0.375rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+
+  /* Retro fonts */
+  --font-heading: 'Archivo Black', sans-serif;
+  --font-body: 'Space Grotesk', sans-serif;
+  --font-sans: 'Space Grotesk', sans-serif;
+
+  /* Override Tailwind font families */
+  --color-font-sans: 'Space Grotesk', sans-serif;
+
+  /* Custom animations */
+  --animate-bounce-subtle: bounce-subtle 0.6s ease-in-out infinite;
+  --animate-retro-slide-in: retro-slide-in 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  --animate-retro-pulse: retro-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+
+  /* Custom shadows */
+  --shadow-retro: 4px 4px 0px var(--color-border);
+  --shadow-retro-lg: 6px 6px 0px var(--color-border);
+  --shadow-retro-xl: 8px 8px 0px var(--color-border);
+
+  /* Border radius (sharp for neobrutalist style) */
+  --radius: 0rem;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-body);
+}
+
+/* Apply retro fonts */
+.font-heading {
+  font-family: var(--font-heading) !important;
+}
+
+.font-body {
+  font-family: var(--font-body) !important;
+}
+
+/* Force Space Grotesk as default */
+* {
+  font-family: 'Space Grotesk', sans-serif;
+}
+
+/* Override specific elements that should use Archivo Black */
+.font-heading,
+h1.font-heading,
+h2.font-heading,
+h3.font-heading,
+h4.font-heading,
+h5.font-heading,
+h6.font-heading {
+  font-family: 'Archivo Black', sans-serif !important;
+}
+
+/* Enhanced retro/neobrutalist utility classes with more visual polish */
+.retro-shadow {
+  box-shadow: 4px 4px 0px var(--border);
+}
+
+.retro-shadow-lg {
+  box-shadow: 6px 6px 0px var(--border);
+}
+
+.retro-shadow-xl {
+  box-shadow: 8px 8px 0px var(--border);
+}
+
+.retro-border {
+  border: 3px solid var(--border);
+}
+
+.retro-border-thick {
+  border: 4px solid var(--border);
+}
+
+/* Added new utility classes for enhanced visual effects */
+.retro-glow {
+  box-shadow: 0 0 20px rgba(255, 107, 53, 0.3);
+}
+
+.retro-hover-lift {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.retro-hover-lift:hover {
+  transform: translate(-3px, -3px);
+  box-shadow: 7px 7px 0px var(--border);
+}
+
+.retro-pulse {
+  animation: retro-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes retro-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+.retro-slide-in {
+  animation: retro-slide-in 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes retro-slide-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Added better gain/loss colors with high contrast */
+.gain-color {
+  color: #10b981; /* Bright emerald green */
+}
+
+.loss-color {
+  color: #dc2626; /* Bright red */
+}
+
+.gain-bg {
+  background-color: #10b981;
+}
+
+.loss-bg {
+  background-color: #dc2626;
+}
+
+/* Fixed search input hover issue */
+.search-container {
+  position: relative;
+}
+
+.search-icon {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  z-index: 10;
+  color: var(--foreground);
+}
+
+.search-input {
+  padding-left: 3rem !important;
+}
+
+/* Enhanced card styling */
+.stock-card {
+  background: var(--card);
+  border: 3px solid var(--border);
+  transition: all 0.2s ease-in-out;
+}
+
+.stock-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+@keyframes bounce-subtle {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+@keyframes retro-slide-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Cartoon polish utilities */
+.cartoon-card {
+  border: 2px solid var(--border);
+  border-radius: 6px;
+  background: var(--card);
+  transition: transform 150ms ease;
+}
+.cartoon-card:hover { transform: translate(-1px, -1px); }
+
+.cartoon-pill {
+  display: inline-block;
+  padding-block: 0.25rem;
+  padding-inline: 0.5rem;
+  border: 3px solid var(--border);
+  border-radius: 0.5rem;
+  background-color: #fff3b0; /* soft yellow tint */
+  color: #111827; /* near-black text */
+  font-weight: 700;
+  font-size: 0.75rem;
+}
+
+.cartoon-badge {
+  border: 2px solid var(--border);
+  background-color: #fff3b0;
+  color: #111827;
+  border-radius: 9999px;
+}
+
+/* Paper dotted background */
+.paper-bg {
+  background-color: var(--background);
+  background-image:
+    radial-gradient(rgba(26, 26, 26, 0.06) 1px, transparent 1px),
+    radial-gradient(rgba(26, 26, 26, 0.06) 1px, transparent 1px);
+  background-size: 22px 22px, 22px 22px;
+  background-position: 0 0, 11px 11px;
+}
+.dark .paper-bg {
+  background-color: var(--background);
+  background-image:
+    radial-gradient(rgba(255, 251, 230, 0.08) 1px, transparent 1px),
+    radial-gradient(rgba(255, 251, 230, 0.08) 1px, transparent 1px);
+}
+
+/* Thick divider for sections */
+.cartoon-divider { block-size: 3px; background-color: var(--border); opacity: .25; border-radius: 9999px; }
+
+/* Icon bubble (optional wrapper) */
+.icon-bubble { inline-size: 1.5rem; block-size: 1.5rem; display: inline-flex; align-items: center; justify-content: center; border: 2.5px solid var(--border); border-radius: 9999px; background: #fff3b0; color: #111827; }
+
+/* NASDAQ icon animation */
+.nasdaq-icon {
+  animation: nasdaq-pulse 3s ease-in-out infinite;
+  transform-origin: center;
+}
+
+@keyframes nasdaq-pulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(255, 210, 63, 0.4);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 0 0 8px rgba(255, 210, 63, 0);
+  }
+}
+
+
+
+
+@keyframes retro-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+/* Enhanced font rendering */
+:root {
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
+/* Skeleton shimmer */
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  background-color: var(--muted);
 }
-a:hover {
-  color: #535bf2;
+.skeleton::after {
+  content: "";
+  position: absolute;
+  inset-inline-start: -150%;
+  inset-block: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.45), transparent);
+  animation: shimmer 1.2s ease-in-out infinite;
 }
-
-body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
-}
-
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
-
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
-
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
+@keyframes shimmer {
+  100% {
+    inset-inline-start: 150%;
   }
 }
+
+
+
