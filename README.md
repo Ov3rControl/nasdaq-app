@@ -1,4 +1,4 @@
-# THNDR NASDAQ App
+# NASDAQ App
 
 A modern, real-time NASDAQ stock explorer built with React, TypeScript, and Vite. This application provides an intuitive interface for browsing and searching NASDAQ stocks with smooth performance and responsive design.
 
@@ -34,7 +34,7 @@ Before running this project, make sure you have:
 1. **Clone the repository**
    ```bash
    git clone <repository-url>
-   cd thndr-nasdaq-app
+   cd nasdaq-app
    ```
 
 2. **Install dependencies**
@@ -53,7 +53,7 @@ Before running this project, make sure you have:
 ## 📁 Project Structure
 
 ```
-thndr-nasdaq-app/
+nasdaq-app/
 ├── apps/
 │   └── web/                 # Main React application
 │       ├── src/
@@ -165,5 +165,3 @@ pnpm build --clean
 This project is licensed under the ISC License.
 
 ---
-
-Built with ❤️ using modern web technologies
