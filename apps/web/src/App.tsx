@@ -3,7 +3,7 @@ import { SplashScreen } from "./components/splash-screen";
 import { ExploreScreen } from "./components/explore-screen";
 import { PerformanceMonitor } from "./components/performance-monitor";
 import { Toaster } from "./components/ui/toaster";
-import { Analytics } from "@vercel/analytics/react";
+
 function App() {
   const [showSplash, setShowSplash] = useState(true);
 
@@ -30,7 +30,6 @@ function App() {
       <ExploreScreen />
       <PerformanceMonitor />
       <Toaster />
-      <Analytics />
     </>
   );
 }
