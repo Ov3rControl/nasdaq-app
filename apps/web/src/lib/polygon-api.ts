@@ -101,9 +101,6 @@ async function makeRequest(
 
   try {
     const response = await fetch(requestUrl.toString(), {
-      headers: {
-        "User-Agent": "NASDAQ-Explorer/1.0",
-      },
       signal: options.signal,
     });
 
