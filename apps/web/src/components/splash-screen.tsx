@@ -1,5 +1,3 @@
-"use client";
-
 import { useEffect, useState } from "react";
 
 export function SplashScreen() {
@@ -11,7 +9,7 @@ export function SplashScreen() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-background flex flex-col items-center justify-center relative overflow-hidden">
+    <div className="min-h-screen bg-background flex flex-col items-center justify-center relative overflow-hidden main-content">
       <div className="absolute inset-0">
         <div className="absolute top-1/4 left-1/4 w-32 h-32 bg-primary retro-border rotate-12 animate-pulse" />
         <div className="absolute bottom-1/4 right-1/4 w-24 h-24 bg-accent retro-border -rotate-12 animate-pulse delay-1000" />
@@ -19,11 +17,17 @@ export function SplashScreen() {
         <div className="absolute top-1/3 right-1/4 w-20 h-20 bg-destructive retro-border -rotate-45 animate-pulse delay-700" />
       </div>
 
-      <div className={`transition-all duration-1000 ${isVisible ? "opacity-100 scale-100" : "opacity-0 scale-95"}`}>
+      <div
+        className={`transition-all duration-1000 ${
+          isVisible ? "opacity-100 scale-100" : "opacity-0 scale-95"
+        }`}
+      >
         <div className="flex items-center justify-center mb-8">
           <div className="relative">
             <div className="w-32 h-32 bg-primary retro-border-thick retro-shadow-xl flex items-center justify-center">
-              <span className="text-primary-foreground font-mono text-4xl font-black">N</span>
+              <span className="text-primary-foreground font-mono text-4xl font-black">
+                N
+              </span>
             </div>
           </div>
         </div>

@@ -1,13 +1,11 @@
-"use client"
-
-import { useState, useEffect } from "react"
-import { Activity, Zap, Clock } from "lucide-react"
-import { Badge } from "@/components/ui/badge"
+import { useState, useEffect } from "react";
+import { Activity, Zap, Clock } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 
 interface PerformanceMetrics {
-  fps: number
-  memoryUsage: number
-  renderTime: number
+  fps: number;
+  memoryUsage: number;
+  renderTime: number;
 }
 
 export function PerformanceMonitor() {
@@ -15,46 +13,48 @@ export function PerformanceMonitor() {
     fps: 0,
     memoryUsage: 0,
     renderTime: 0,
-  })
+  });
 
   useEffect(() => {
-    let frameCount = 0
-    let lastTime = performance.now()
-    let animationId: number
+    let frameCount = 0;
+    let lastTime = performance.now();
+    let animationId: number;
 
     const measurePerformance = () => {
-      const currentTime = performance.now()
-      frameCount++
+      const currentTime = performance.now();
+      frameCount++;
 
       if (currentTime - lastTime >= 1000) {
-        const fps = Math.round((frameCount * 1000) / (currentTime - lastTime))
-        
+        const fps = Math.round((frameCount * 1000) / (currentTime - lastTime));
+
         // Memory usage (if available)
-        const memory = (performance as any).memory
-        const memoryUsage = memory ? Math.round(memory.usedJSHeapSize / 1024 / 1024) : 0
+        const memory = (performance as any).memory;
+        const memoryUsage = memory
+          ? Math.round(memory.usedJSHeapSize / 1024 / 1024)
+          : 0;
 
         // Render time approximation
-        const renderTime = Math.round(currentTime - lastTime)
+        const renderTime = Math.round(currentTime - lastTime);
 
         setMetrics({
           fps,
           memoryUsage,
           renderTime,
-        })
+        });
 
-        frameCount = 0
-        lastTime = currentTime
+        frameCount = 0;
+        lastTime = currentTime;
       }
 
-      animationId = requestAnimationFrame(measurePerformance)
-    }
+      animationId = requestAnimationFrame(measurePerformance);
+    };
 
-    animationId = requestAnimationFrame(measurePerformance)
+    animationId = requestAnimationFrame(measurePerformance);
 
     return () => {
-      cancelAnimationFrame(animationId)
-    }
-  }, [])
+      cancelAnimationFrame(animationId);
+    };
+  }, []);
 
   return (
     <div className="fixed bottom-4 left-4 z-50 flex space-x-2">
@@ -62,18 +62,18 @@ export function PerformanceMonitor() {
         <Activity className="w-3 h-3 mr-1" />
         {metrics.fps} FPS
       </Badge>
-      
+
       {metrics.memoryUsage > 0 && (
         <Badge variant="secondary" className="retro-border">
           <Zap className="w-3 h-3 mr-1" />
           {metrics.memoryUsage}MB
         </Badge>
       )}
-      
+
       <Badge variant="secondary" className="retro-border">
         <Clock className="w-3 h-3 mr-1" />
         {metrics.renderTime}ms
       </Badge>
     </div>
-  )
+  );
 }

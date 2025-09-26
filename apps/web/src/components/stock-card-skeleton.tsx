@@ -1,11 +1,9 @@
-"use client";
-
 import { Card, CardContent } from "@/components/ui/card";
 
 export function StockCardSkeleton() {
   return (
-    <Card className="cartoon-card">
-      <CardContent className="p-5">
+    <Card className="cartoon-card overflow-hidden h-full">
+      <CardContent className="p-5 flex h-full flex-col justify-between">
         <div className="flex items-start justify-between mb-3">
           <div className="flex-1">
             <div className="space-y-2">

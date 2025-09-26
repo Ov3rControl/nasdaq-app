@@ -1,106 +1,111 @@
-"use client";
-
-import {
-  useState,
-  useEffect,
-  useCallback,
-  useMemo,
-  startTransition,
-} from "react";
+import { useInfiniteQuery } from "@tanstack/react-query";
+import { useMemo, useState, useEffect, startTransition, useRef } from "react";
 import { Search, AlertCircle, Wifi, WifiOff, Activity } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { StockCard } from "@/components/stock-card";
-import { VirtualList } from "@/components/virtual-list";
 import { StockCardSkeleton } from "@/components/stock-card-skeleton";
-import { useDebounce } from "@/hooks/use-debounce";
 import { useNetworkStatus } from "@/hooks/use-network-status";
 import { useIntersectionObserver } from "@/hooks/use-intersection-observer";
-import { generateMockStockData } from "@/lib/utils";
-import type { StockItem } from "@/types/stock";
+import { useDebounce } from "@/hooks/use-debounce";
+import { tickersQueryOptions } from "@/lib/stocks-query";
+import { useNavigate } from "@tanstack/react-router";
 
-export function ExploreScreen() {
-  const [stocks, setStocks] = useState<StockItem[]>([]);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [loading, setLoading] = useState(false);
+type ExploreScreenProps = {
+  initialQuery?: string;
+};
+
+export function ExploreScreen({ initialQuery = "" }: ExploreScreenProps) {
+  const [searchQuery, setSearchQuery] = useState(initialQuery);
   const [error, setError] = useState<string | null>(null);
-  const [nextCursor, setNextCursor] = useState<string | undefined>();
-  const [useVirtualization, setUseVirtualization] = useState(false);
+  const useVirtualization = false;
+  const [hasUserScrolled, setHasUserScrolled] = useState(false);
+  const navigate = useNavigate();
 
   const networkStatus = useNetworkStatus();
   const debouncedSearch = useDebounce(searchQuery, 300);
 
-  // Intersection observer for infinite scroll
+  // Always use the regular hook to avoid conditional hook issues
+  const {
+    data,
+    status,
+    error: queryError,
+    fetchNextPage,
+    hasNextPage,
+    isFetching,
+    isFetchingNextPage,
+  } = useInfiniteQuery(tickersQueryOptions(debouncedSearch));
+
+  const stocks = useMemo(() => {
+    const pages = data?.pages ?? [];
+    return pages.flatMap((page) => page.stocks);
+  }, [data]);
+
   const { targetRef: loadMoreRef, isIntersecting } = useIntersectionObserver({
-    threshold: 0.1,
+    threshold: 0,
+    rootMargin: "300px 0px 300px 0px",
+    enabled: hasNextPage && hasUserScrolled,
   });
 
-  // Memoized filtered stocks for performance
-  const filteredStocks = useMemo(() => {
-    if (!debouncedSearch) return stocks;
-    return stocks.filter(
-      (stock) =>
-        stock.ticker.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
-        stock.name.toLowerCase().includes(debouncedSearch.toLowerCase())
-    );
-  }, [stocks, debouncedSearch]);
-
-  const loadStocks = useCallback(
-    async (search = "", isLoadMore = false) => {
-      setLoading(true);
-      setError(null);
-
-      try {
-        // Simulate API delay
-        await new Promise((resolve) => setTimeout(resolve, 500));
-
-        // Generate mock data
-        const mockData = generateMockStockData(20);
-        const result = {
-          stocks: mockData,
-          nextCursor: mockData.length >= 20 ? "next-page" : undefined,
-        };
-
-        startTransition(() => {
-          if (isLoadMore) {
-            setStocks((prev) => [...prev, ...result.stocks]);
-          } else {
-            setStocks(result.stocks);
-          }
-          setNextCursor(result.nextCursor);
-        });
-      } catch (err) {
-        console.error("API Error:", err);
-        setError("Network error. Please check your connection and try again.");
-
-        if (!isLoadMore) {
-          setStocks([]);
-        }
-      } finally {
-        setLoading(false);
-      }
-    },
-    [nextCursor]
-  );
-
-  // Load more when intersection observer triggers
   useEffect(() => {
-    if (isIntersecting && !loading && nextCursor) {
-      loadStocks(debouncedSearch, true);
+    setSearchQuery(initialQuery);
+  }, [initialQuery]);
+
+  // Enable auto-loading next pages only after the user scrolls at least once
+  useEffect(() => {
+    const onScroll = () => setHasUserScrolled(true);
+    if (typeof window !== "undefined") {
+      const options: AddEventListenerOptions = { passive: true, once: true };
+      window.addEventListener("scroll", onScroll, options);
+      return () => window.removeEventListener("scroll", onScroll, options);
     }
-  }, [isIntersecting, loading, nextCursor, debouncedSearch, loadStocks]);
+  }, []);
+
+  // Sync debounced search to URL (debounced navigation)
+  useEffect(() => {
+    navigate({
+      to: "/explore",
+      search: (prev) => ({ ...prev, q: debouncedSearch || undefined }),
+      replace: true,
+      resetScroll: false,
+    });
+  }, [debouncedSearch, navigate]);
 
   useEffect(() => {
-    loadStocks(debouncedSearch, false);
-  }, [debouncedSearch, loadStocks]);
+    if (!queryError) {
+      setError(null);
+      return;
+    }
 
-  // Enable virtualization for large datasets
+    const message =
+      queryError instanceof Error
+        ? queryError.message
+        : "Unable to fetch stocks at this time.";
+
+    // Keep previous stocks rendered; only show inline error banner
+    setError(message);
+  }, [queryError]);
+
+  // Trigger on rising edge of intersection to avoid duplicate calls
+  const prevIntersectingRef = useRef(false);
   useEffect(() => {
-    const shouldVirtualize =
-      stocks.length > 100 &&
-      (typeof window !== "undefined" ? window.innerWidth >= 1024 : true);
-    setUseVirtualization(shouldVirtualize);
-  }, [stocks.length]);
+    if (!hasUserScrolled || !hasNextPage || isFetchingNextPage) return;
+    if (isIntersecting && !prevIntersectingRef.current) {
+      fetchNextPage();
+    }
+    prevIntersectingRef.current = isIntersecting;
+  }, [
+    isIntersecting,
+    hasUserScrolled,
+    hasNextPage,
+    isFetchingNextPage,
+    fetchNextPage,
+  ]);
+
+  const isInitialLoading = status === "pending";
+  const isEmpty = stocks.length === 0;
+
+  // Virtualization disabled
   const [skeletonCount, setSkeletonCount] = useState(6);
 
   useEffect(() => {
@@ -115,14 +120,10 @@ export function ExploreScreen() {
     }
   }, []);
 
-  const renderStockItem = useCallback((stock: StockItem, index: number) => {
-    return (
-      <StockCard key={`${stock.ticker}-${index}`} stock={stock} index={index} />
-    );
-  }, []);
+  // No virtualization
 
   return (
-    <div className="min-h-screen paper-bg">
+    <div className="min-h-screen paper-bg main-content">
       {/* Header */}
       <div className="bg-background border-b-[2px] border-black sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-6 py-5">
@@ -155,7 +156,13 @@ export function ExploreScreen() {
                 <Input
                   placeholder="Search stocks by symbol or name"
                   value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    // Use React startTransition for smoother updates
+                    startTransition(() => {
+                      setSearchQuery(value);
+                    });
+                  }}
                   className="pl-12 h-12 w-full bg-white border-[3px] border-black focus-visible:ring-0 focus-visible:ring-offset-0 shadow-none"
                   style={{ borderRadius: "6px" }}
                 />
@@ -184,18 +191,10 @@ export function ExploreScreen() {
                   variant="secondary"
                   className="cartoon-badge bg-yellow-100 text-black"
                 >
+                  {/* Will keep this here incase we implement live updates via WS */}
                   <Activity strokeWidth={3} className="w-4 h-4 me-1" />
                   <span className="font-body">Live</span>
                 </Badge>
-
-                {useVirtualization && (
-                  <Badge
-                    variant="outline"
-                    className="cartoon-badge text-xs bg-white"
-                  >
-                    <span className="font-body">Virtual</span>
-                  </Badge>
-                )}
               </div>
             </div>
           </div>
@@ -213,23 +212,15 @@ export function ExploreScreen() {
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-6 py-8">
-        {loading && filteredStocks.length === 0 ? (
+        {isInitialLoading && isEmpty ? (
           <div className="grid grid-cols-1 gap-4 sm:gap-5 lg:gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4">
             {Array.from({ length: skeletonCount }).map((_, i) => (
               <StockCardSkeleton key={i} />
             ))}
           </div>
-        ) : useVirtualization ? (
-          <VirtualList
-            items={filteredStocks}
-            itemHeight={180}
-            containerHeight={600}
-            renderItem={renderStockItem}
-            overscan={5}
-          />
         ) : (
           <div className="grid grid-cols-1 gap-4 sm:gap-5 lg:gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4">
-            {filteredStocks.map((stock, index) => (
+            {stocks.map((stock, index) => (
               <StockCard
                 key={`${stock.ticker}-${index}`}
                 stock={stock}
@@ -239,7 +230,7 @@ export function ExploreScreen() {
           </div>
         )}
 
-        {loading && filteredStocks.length > 0 && (
+        {isFetchingNextPage && stocks.length > 0 && (
           <div className="flex justify-center py-12">
             <div className="flex space-x-2">
               <div className="w-3 h-3 bg-yellow-400 rounded-full animate-bounce" />
@@ -250,34 +241,44 @@ export function ExploreScreen() {
         )}
 
         {/* Infinite scroll trigger */}
-        {!useVirtualization &&
-          !loading &&
-          filteredStocks.length > 0 &&
-          nextCursor && (
-            <div
-              ref={loadMoreRef}
-              className="h-10 flex items-center justify-center"
-            >
-              <span className="text-sm text-gray-500 font-body">
-                Loading more...
-              </span>
-            </div>
-          )}
+        {!useVirtualization && stocks.length > 0 && hasNextPage && (
+          <div className="flex flex-col items-center gap-2 py-6">
+            <div ref={loadMoreRef} className="h-4" />
+            {!isFetchingNextPage && (
+              <button
+                type="button"
+                onClick={() => fetchNextPage()}
+                className="text-sm text-gray-600 underline font-body"
+              >
+                Load more
+              </button>
+            )}
+          </div>
+        )}
 
-        {!loading && filteredStocks.length === 0 && searchQuery && (
+        {!useVirtualization && stocks.length > 0 && !hasNextPage && (
+          <div className="text-center py-10 text-gray-500 text-sm font-body">
+            End of results
+          </div>
+        )}
+
+        {/* Empty results (no error) */}
+        {!isFetching && isEmpty && !error && (
           <div className="text-center py-16">
             <div className="bg-white rounded-lg border border-gray-200 p-8 inline-block">
               <p className="text-gray-900 font-semibold text-xl mb-2 font-heading">
-                No stocks found matching "{searchQuery}"
+                No stocks found
               </p>
               <p className="text-gray-600 text-sm font-body">
-                Try a different search term or browse all stocks
+                {searchQuery
+                  ? `We couldn't find results for "${searchQuery}". Try a different term.`
+                  : "There are no stocks to display right now."}
               </p>
             </div>
           </div>
         )}
 
-        {!loading && filteredStocks.length === 0 && !searchQuery && error && (
+        {!isFetching && isEmpty && error && (
           <div className="text-center py-16">
             <div className="bg-white rounded-lg border border-gray-200 p-8 inline-block">
               <p className="text-gray-900 font-semibold text-xl mb-2 font-heading">

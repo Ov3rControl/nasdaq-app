@@ -1,5 +1,3 @@
-"use client";
-
 import { memo } from "react";
 import { TrendingUp, TrendingDown } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
@@ -16,8 +14,8 @@ export const StockCard = memo(function StockCard({ stock }: StockCardProps) {
   const isGain = stock.change >= 0;
 
   return (
-    <Card className="cartoon-card">
-      <CardContent className="p-5">
+    <Card className="cartoon-card h-full overflow-hidden">
+      <CardContent className="p-5 flex h-full flex-col justify-between">
         <div className="flex items-start justify-between mb-3">
           <div className="flex-1">
             <div className="mb-1.5">
