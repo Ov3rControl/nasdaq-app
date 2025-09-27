@@ -5,6 +5,8 @@ import {
   useRouter,
 } from "@tanstack/react-router";
 import { SplashScreen } from "@/components/splash-screen";
+import { useQueryClient } from "@tanstack/react-query";
+import { tickersQueryOptions } from "@/lib/stocks-query";
 
 const SPLASH_DURATION_MS = 3000;
 
@@ -15,20 +17,15 @@ export const Route = createFileRoute("/")({
 function SplashRoute() {
   const navigate = useNavigate({ from: "/" });
   const router = useRouter();
+  const qc = useQueryClient();
 
   useEffect(() => {
     let isActive = true;
 
-    router.preloadRoute({ to: "/explore" }).catch((error) => {
-      if (import.meta.env.DEV) {
-        console.error("Failed to preload explore route", error);
-      }
-    });
+    qc.prefetchInfiniteQuery(tickersQueryOptions());
 
     const timer = window.setTimeout(() => {
       if (!isActive) return;
-
-      // Use TanStack Router's built-in view transitions
       navigate({
         to: "/explore",
         replace: true,
@@ -40,7 +37,7 @@ function SplashRoute() {
       isActive = false;
       window.clearTimeout(timer);
     };
-  }, [navigate, router]);
+  }, [navigate, qc, router]);
 
   return <SplashScreen />;
 }

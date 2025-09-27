@@ -240,6 +240,12 @@ h6.font-heading {
   padding-left: 3rem !important;
 }
 
+
+.retro-input:focus,
+.retro-input:focus-visible {
+  outline: none !important;
+}
+
 /* Enhanced card styling */
 .stock-card {
   background: var(--card);

@@ -1,29 +1,22 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { useMemo, useState, useEffect, startTransition, useRef } from "react";
+import { useMemo, useState, useEffect, useRef } from "react";
 import { Search, AlertCircle, Wifi, WifiOff, Activity } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+
 import { StockCard } from "@/components/stock-card";
 import { StockCardSkeleton } from "@/components/stock-card-skeleton";
 import { useNetworkStatus } from "@/hooks/use-network-status";
 import { useIntersectionObserver } from "@/hooks/use-intersection-observer";
-import { useDebounce } from "@/hooks/use-debounce";
 import { tickersQueryOptions } from "@/lib/stocks-query";
-import { useNavigate } from "@tanstack/react-router";
+import { useSearchWithURL } from "@/hooks/use-search-with-url";
 
-type ExploreScreenProps = {
-  initialQuery?: string;
-};
-
-export function ExploreScreen({ initialQuery = "" }: ExploreScreenProps) {
-  const [searchQuery, setSearchQuery] = useState(initialQuery);
+export function ExploreScreen() {
   const [error, setError] = useState<string | null>(null);
   const useVirtualization = false;
   const [hasUserScrolled, setHasUserScrolled] = useState(false);
-  const navigate = useNavigate();
-
+  const { input, setInput, query, isPending } = useSearchWithURL();
   const networkStatus = useNetworkStatus();
-  const debouncedSearch = useDebounce(searchQuery, 300);
 
   // Always use the regular hook to avoid conditional hook issues
   const {
@@ -34,7 +27,7 @@ export function ExploreScreen({ initialQuery = "" }: ExploreScreenProps) {
     hasNextPage,
     isFetching,
     isFetchingNextPage,
-  } = useInfiniteQuery(tickersQueryOptions(debouncedSearch));
+  } = useInfiniteQuery(tickersQueryOptions(query));
 
   const stocks = useMemo(() => {
     const pages = data?.pages ?? [];
@@ -47,10 +40,6 @@ export function ExploreScreen({ initialQuery = "" }: ExploreScreenProps) {
     enabled: hasNextPage && hasUserScrolled,
   });
 
-  useEffect(() => {
-    setSearchQuery(initialQuery);
-  }, [initialQuery]);
-
   // Enable auto-loading next pages only after the user scrolls at least once
   useEffect(() => {
     const onScroll = () => setHasUserScrolled(true);
@@ -60,16 +49,6 @@ export function ExploreScreen({ initialQuery = "" }: ExploreScreenProps) {
       return () => window.removeEventListener("scroll", onScroll, options);
     }
   }, []);
-
-  // Sync debounced search to URL (debounced navigation)
-  useEffect(() => {
-    navigate({
-      to: "/explore",
-      search: (prev) => ({ ...prev, q: debouncedSearch || undefined }),
-      replace: true,
-      resetScroll: false,
-    });
-  }, [debouncedSearch, navigate]);
 
   useEffect(() => {
     if (!queryError) {
@@ -155,16 +134,13 @@ export function ExploreScreen({ initialQuery = "" }: ExploreScreenProps) {
                 />
                 <Input
                   placeholder="Search stocks by symbol or name"
-                  value={searchQuery}
-                  onChange={(e) => {
-                    const value = e.target.value;
-                    // Use React startTransition for smoother updates
-                    startTransition(() => {
-                      setSearchQuery(value);
-                    });
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  style={{
+                    opacity: isPending ? 0.7 : 1,
+                    borderRadius: "6px",
                   }}
                   className="pl-12 h-12 w-full bg-white border-[3px] border-black focus-visible:ring-0 focus-visible:ring-offset-0 shadow-none"
-                  style={{ borderRadius: "6px" }}
                 />
               </div>
 
@@ -270,8 +246,8 @@ export function ExploreScreen({ initialQuery = "" }: ExploreScreenProps) {
                 No stocks found
               </p>
               <p className="text-gray-600 text-sm font-body">
-                {searchQuery
-                  ? `We couldn't find results for "${searchQuery}". Try a different term.`
+                {query
+                  ? `We couldn't find results for "${query}". Try a different term.`
                   : "There are no stocks to display right now."}
               </p>
             </div>
