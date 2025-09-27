@@ -1,4 +1,4 @@
-@import 'tailwindcss';
+@import "tailwindcss";
 
 :root {
   /* Retro dashboard palette with soft edges and bold black borders */
@@ -88,12 +88,12 @@
   --radius-xl: 1rem;
 
   /* Retro fonts */
-  --font-heading: 'Archivo Black', sans-serif;
-  --font-body: 'Space Grotesk', sans-serif;
-  --font-sans: 'Space Grotesk', sans-serif;
+  --font-heading: "Archivo Black", sans-serif;
+  --font-body: "Space Grotesk", sans-serif;
+  --font-sans: "Space Grotesk", sans-serif;
 
   /* Override Tailwind font families */
-  --color-font-sans: 'Space Grotesk', sans-serif;
+  --color-font-sans: "Space Grotesk", sans-serif;
 
   /* Custom animations */
   --animate-bounce-subtle: bounce-subtle 0.6s ease-in-out infinite;
@@ -126,7 +126,7 @@ body {
 
 /* Force Space Grotesk as default */
 * {
-  font-family: 'Space Grotesk', sans-serif;
+  font-family: "Space Grotesk", sans-serif;
 }
 
 /* Override specific elements that should use Archivo Black */
@@ -137,7 +137,7 @@ h3.font-heading,
 h4.font-heading,
 h5.font-heading,
 h6.font-heading {
-  font-family: 'Archivo Black', sans-serif !important;
+  font-family: "Archivo Black", sans-serif !important;
 }
 
 /* Enhanced retro/neobrutalist utility classes with more visual polish */
@@ -240,7 +240,6 @@ h6.font-heading {
   padding-left: 3rem !important;
 }
 
-
 .retro-input:focus,
 .retro-input:focus-visible {
   outline: none !important;
@@ -259,8 +258,13 @@ h6.font-heading {
 }
 
 @keyframes bounce-subtle {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-5px); }
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
 }
 
 @keyframes retro-slide-in {
@@ -281,7 +285,9 @@ h6.font-heading {
   background: var(--card);
   transition: transform 150ms ease;
 }
-.cartoon-card:hover { transform: translate(-1px, -1px); }
+.cartoon-card:hover {
+  transform: translate(-1px, -1px);
+}
 
 .cartoon-pill {
   display: inline-block;
@@ -305,24 +311,40 @@ h6.font-heading {
 /* Paper dotted background */
 .paper-bg {
   background-color: var(--background);
-  background-image:
-    radial-gradient(rgba(26, 26, 26, 0.06) 1px, transparent 1px),
+  background-image: radial-gradient(rgba(26, 26, 26, 0.06) 1px, transparent 1px),
     radial-gradient(rgba(26, 26, 26, 0.06) 1px, transparent 1px);
   background-size: 22px 22px, 22px 22px;
   background-position: 0 0, 11px 11px;
 }
 .dark .paper-bg {
   background-color: var(--background);
-  background-image:
-    radial-gradient(rgba(255, 251, 230, 0.08) 1px, transparent 1px),
+  background-image: radial-gradient(
+      rgba(255, 251, 230, 0.08) 1px,
+      transparent 1px
+    ),
     radial-gradient(rgba(255, 251, 230, 0.08) 1px, transparent 1px);
 }
 
 /* Thick divider for sections */
-.cartoon-divider { block-size: 3px; background-color: var(--border); opacity: .25; border-radius: 9999px; }
+.cartoon-divider {
+  block-size: 3px;
+  background-color: var(--border);
+  opacity: 0.25;
+  border-radius: 9999px;
+}
 
 /* Icon bubble (optional wrapper) */
-.icon-bubble { inline-size: 1.5rem; block-size: 1.5rem; display: inline-flex; align-items: center; justify-content: center; border: 2.5px solid var(--border); border-radius: 9999px; background: #fff3b0; color: #111827; }
+.icon-bubble {
+  inline-size: 1.5rem;
+  block-size: 1.5rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 2.5px solid var(--border);
+  border-radius: 9999px;
+  background: #fff3b0;
+  color: #111827;
+}
 
 /* NASDAQ icon animation */
 .nasdaq-icon {
@@ -331,7 +353,8 @@ h6.font-heading {
 }
 
 @keyframes nasdaq-pulse {
-  0%, 100% {
+  0%,
+  100% {
     transform: scale(1);
     box-shadow: 0 0 0 0 rgba(255, 210, 63, 0.4);
   }
@@ -341,25 +364,27 @@ h6.font-heading {
   }
 }
 
-
-
-
 @keyframes retro-pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.7; }
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
 }
 
 /* View Transitions */
-.main-content {
-  view-transition-name: main-content;
+.splash-vt {
+  view-transition-name: splash;
 }
 
 /* Slide Right Transition (typed) */
 html:active-view-transition-type(slide-right) {
-  &::view-transition-old(main-content) {
+  &::view-transition-old(splash) {
     animation: 300ms cubic-bezier(0.4, 0, 0.2, 1) both slide-out-right;
   }
-  &::view-transition-new(main-content) {
+  &::view-transition-new(splash) {
     animation: 300ms cubic-bezier(0.4, 0, 0.2, 1) both slide-in-right;
   }
 }
@@ -383,40 +408,61 @@ html:active-view-transition-type(slide-right) {
 }
 
 /* Logical-direction Slide Left (RTL-aware) */
-:root { --slide-inline-mult: 1; }
-:root[dir="rtl"] { --slide-inline-mult: -1; }
+:root {
+  --slide-inline-mult: 1;
+}
+:root[dir="rtl"] {
+  --slide-inline-mult: -1;
+}
 
-html:active-view-transition-type(slide-left) {
-  &::view-transition-old(main-content) {
-    animation: 320ms cubic-bezier(0.4, 0, 0.2, 1) both slide-out-inline-start;
+html:active-view-transition-type(fade-push) {
+  &::view-transition-old(splash) {
+    animation: 400ms cubic-bezier(0.25, 0.46, 0.45, 0.94) both fade-push-out;
   }
-  &::view-transition-new(main-content) {
-    animation: 320ms cubic-bezier(0.4, 0, 0.2, 1) both slide-in-inline-start;
+  &::view-transition-new(splash) {
+    animation: 500ms cubic-bezier(0.25, 0.46, 0.45, 0.94) both fade-push-in;
   }
 }
 
-@keyframes slide-out-inline-start {
+@keyframes fade-push-out {
   from {
     opacity: 1;
-    transform: translateX(0);
+    transform: translateY(0) scale(1);
+    filter: blur(0px);
   }
   to {
-    opacity: .96;
-    transform: translateX(calc(-80% * var(--slide-inline-mult)));
+    opacity: 0;
+    transform: translateY(-20px) scale(0.98);
+    filter: blur(2px);
   }
 }
 
-@keyframes slide-in-inline-start {
+@keyframes fade-push-in {
   from {
-    opacity: .96;
-    transform: translateX(calc(110% * var(--slide-inline-mult)));
+    opacity: 0;
+    transform: translateY(30px) scale(1.02);
+    filter: blur(3px);
   }
   to {
     opacity: 1;
-    transform: translateX(0);
+    transform: translateY(0) scale(1);
+    filter: blur(0px);
   }
 }
 
+/* Fallback: apply fade-push animation targeting splash only */
+@supports (view-transition-name: splash) {
+  @media (prefers-reduced-motion: no-preference) {
+    ::view-transition-old(splash) {
+      animation: 400ms cubic-bezier(0.25, 0.46, 0.45, 0.94) both fade-push-out;
+    }
+    ::view-transition-new(splash) {
+      animation: 500ms cubic-bezier(0.25, 0.46, 0.45, 0.94) both fade-push-in;
+    }
+  }
+}
+
+/* Remove push-left effect globally to avoid animating Explore */
 
 /* Enhanced font rendering */
 :root {
@@ -437,7 +483,12 @@ html:active-view-transition-type(slide-left) {
   position: absolute;
   inset-inline-start: -150%;
   inset-block: 0;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.45), transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.45),
+    transparent
+  );
   animation: shimmer 1.2s ease-in-out infinite;
 }
 @keyframes shimmer {
@@ -445,6 +496,3 @@ html:active-view-transition-type(slide-left) {
     inset-inline-start: 150%;
   }
 }
-
-
-

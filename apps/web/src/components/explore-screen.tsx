@@ -102,7 +102,7 @@ export function ExploreScreen() {
   // No virtualization
 
   return (
-    <div className="min-h-screen paper-bg main-content">
+    <div className="min-h-screen paper-bg">
       {/* Header */}
       <div className="bg-background border-b-[2px] border-black sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-6 py-5">

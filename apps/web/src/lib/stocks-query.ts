@@ -1,5 +1,5 @@
 import { infiniteQueryOptions, keepPreviousData } from "@tanstack/react-query";
-import { listNasdaqTickers, type ListTickersParams } from "@/lib/polygon-api";
+import { listNasdaqTickers, type ListTickersParams } from "./api";
 
 export const STOCKS_PAGE_SIZE = 20;
 

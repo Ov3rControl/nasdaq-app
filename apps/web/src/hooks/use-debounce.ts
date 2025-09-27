@@ -1,3 +1,4 @@
+/* eslint-disable react-you-might-not-need-an-effect/no-reset-all-state-on-prop-change */
 import { useState, useEffect } from "react";
 
 export function useDebounce<T>(value: T, delay: number): T {

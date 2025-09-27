@@ -1,5 +1,13 @@
 import { useState, useEffect } from "react";
 
+interface ConnectionProperties {
+  effectiveType: string;
+  downlink: number;
+  rtt: number;
+}
+
+interface NetworkInformation extends EventTarget, ConnectionProperties {}
+
 interface NetworkStatus {
   isOnline: boolean;
   effectiveType?: string;
@@ -7,18 +15,22 @@ interface NetworkStatus {
   rtt?: number;
 }
 
+declare global {
+  interface Navigator {
+    connection?: NetworkInformation;
+  }
+}
 export function useNetworkStatus(): NetworkStatus {
   const [networkStatus, setNetworkStatus] = useState<NetworkStatus>({
     isOnline: typeof navigator !== "undefined" ? navigator.onLine : true,
   });
 
   useEffect(() => {
-    const updateNetworkStatus = () => {
-      const connection =
-        (navigator as any).connection ||
-        (navigator as any).mozConnection ||
-        (navigator as any).webkitConnection;
+    if (typeof window === "undefined") return;
 
+    const connection = navigator.connection;
+
+    const updateNetworkStatus = () => {
       setNetworkStatus({
         isOnline: navigator.onLine,
         effectiveType: connection?.effectiveType,
@@ -27,32 +39,25 @@ export function useNetworkStatus(): NetworkStatus {
       });
     };
 
-    const handleOnline = () => updateNetworkStatus();
-    const handleOffline = () => updateNetworkStatus();
-    const handleConnectionChange = () => updateNetworkStatus();
+    const handleNetworkChange = () => updateNetworkStatus();
 
     // Initial status
     updateNetworkStatus();
 
     // Event listeners
-    window.addEventListener("online", handleOnline);
-    window.addEventListener("offline", handleOffline);
-
-    const connection =
-      (navigator as any).connection ||
-      (navigator as any).mozConnection ||
-      (navigator as any).webkitConnection;
+    window.addEventListener("online", handleNetworkChange);
+    window.addEventListener("offline", handleNetworkChange);
 
     if (connection) {
-      connection.addEventListener("change", handleConnectionChange);
+      connection.addEventListener("change", handleNetworkChange);
     }
 
     return () => {
-      window.removeEventListener("online", handleOnline);
-      window.removeEventListener("offline", handleOffline);
+      window.removeEventListener("online", handleNetworkChange);
+      window.removeEventListener("offline", handleNetworkChange);
 
       if (connection) {
-        connection.removeEventListener("change", handleConnectionChange);
+        connection.removeEventListener("change", handleNetworkChange);
       }
     };
   }, []);

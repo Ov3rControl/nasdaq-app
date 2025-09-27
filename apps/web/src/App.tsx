@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
 import { SplashScreen } from "./components/splash-screen";
 import { ExploreScreen } from "./components/explore-screen";
-import { PerformanceMonitor } from "./components/performance-monitor";
-import { Toaster } from "./components/ui/toaster";
 
 function App() {
   const [showSplash, setShowSplash] = useState(true);
@@ -19,8 +17,6 @@ function App() {
     return (
       <>
         <SplashScreen />
-        <PerformanceMonitor />
-        <Toaster />
       </>
     );
   }
@@ -28,8 +24,6 @@ function App() {
   return (
     <>
       <ExploreScreen />
-      <PerformanceMonitor />
-      <Toaster />
     </>
   );
 }

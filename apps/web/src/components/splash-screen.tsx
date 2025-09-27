@@ -10,7 +10,7 @@ export function SplashScreen() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-background flex flex-col items-center justify-center relative overflow-hidden main-content">
+    <div className="min-h-screen bg-background flex flex-col items-center justify-center relative overflow-hidden splash-vt">
       <div className="absolute inset-0">
         <div className="absolute top-1/4 left-1/4 w-32 h-32 bg-primary retro-border rotate-12 animate-pulse" />
         <div className="absolute bottom-1/4 right-1/4 w-24 h-24 bg-accent retro-border -rotate-12 animate-pulse delay-1000" />

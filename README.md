@@ -2,6 +2,8 @@
 
 A modern, real-time NASDAQ stock explorer built with React, TypeScript, and Vite. This application provides an intuitive interface for browsing and searching NASDAQ stocks with smooth performance and responsive design.
 
+- Splash screen has 3000ms delay for demo but in production splash screen chunk is loaded alone to appear instant and it pre-fetches the explore screen data to appear instant as well
+
 ## 🚀 Features
 
 - **Real-time Stock Data**: Browse and search NASDAQ stocks with live data

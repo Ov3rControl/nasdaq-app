@@ -29,7 +29,7 @@ function SplashRoute() {
       navigate({
         to: "/explore",
         replace: true,
-        viewTransition: { types: ["slide-left"] },
+        viewTransition: { types: ["fade-push"] },
       });
     }, SPLASH_DURATION_MS);
 

@@ -13,7 +13,6 @@ const queryClient = createQueryClient();
 
 const router = createRouter({
   routeTree,
-  defaultViewTransition: true,
   context: {
     queryClient,
   },
