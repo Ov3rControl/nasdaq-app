@@ -2,20 +2,13 @@ import type { StockItem } from "@/types/stock";
 import type { PolygonTicker } from "./types";
 
 /**
- * Data transformation utilities
- */
-
-/**
- * Normalize search input
+ * Normalize search input just in case prob we won't need it
  */
 export function normalizeSearch(search?: string): string | undefined {
   const trimmed = search?.trim();
   return trimmed || undefined;
 }
 
-/**
- * Extract cursor from next URL
- */
 export function extractCursor(nextUrl?: string | null): string | undefined {
   if (!nextUrl) return undefined;
 
@@ -27,9 +20,6 @@ export function extractCursor(nextUrl?: string | null): string | undefined {
   }
 }
 
-/**
- * Safely extract cursor from potentially malformed input
- */
 export function safeCursor(cursor?: string): string | undefined {
   if (!cursor) return undefined;
 
@@ -41,10 +31,6 @@ export function safeCursor(cursor?: string): string | undefined {
   return cursor;
 }
 
-/**
- * Derive deterministic price metrics from ticker symbol
- * This creates consistent mock data for demonstration purposes
- */
 export function deriveMetrics(ticker: string): {
   price: number;
   change: number;

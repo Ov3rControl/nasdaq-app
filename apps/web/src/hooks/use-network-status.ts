@@ -41,10 +41,8 @@ export function useNetworkStatus(): NetworkStatus {
 
     const handleNetworkChange = () => updateNetworkStatus();
 
-    // Initial status
     updateNetworkStatus();
 
-    // Event listeners
     window.addEventListener("online", handleNetworkChange);
     window.addEventListener("offline", handleNetworkChange);
 

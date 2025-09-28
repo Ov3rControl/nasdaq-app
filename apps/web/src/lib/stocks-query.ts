@@ -3,10 +3,6 @@ import { listNasdaqTickers, type ListTickersParams } from "./api";
 
 export const STOCKS_PAGE_SIZE = 20;
 
-/**
- * Creates infinite query options for fetching NASDAQ tickers with search
- * @param search - Optional search query for filtering tickers
- */
 export function tickersQueryOptions(search: string = "") {
   const normalizedSearch = search.trim();
 

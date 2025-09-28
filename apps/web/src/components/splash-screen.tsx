@@ -36,7 +36,7 @@ export function SplashScreen() {
         <h1 className="text-6xl md:text-8xl font-black text-center mb-4 text-foreground font-mono uppercase tracking-wider">
           NASDAQ
         </h1>
-        <p className="text-2xl text-foreground text-center mb-12 font-mono font-bold uppercase tracking-wide bg-accent text-accent-foreground px-6 py-2 retro-border retro-shadow">
+        <p className="text-2xl text-center mb-12 font-mono font-bold uppercase tracking-wide bg-accent text-accent-foreground px-6 py-2 retro-border retro-shadow">
           Stock Explorer
         </p>
 
