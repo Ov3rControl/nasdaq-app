@@ -23,10 +23,6 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
-      "@repo/core": path.resolve(__dirname, "../../packages/core"),
-      "@repo/api": path.resolve(__dirname, "../../packages/api"),
-      "@repo/data": path.resolve(__dirname, "../../packages/data"),
-      "@repo/storage": path.resolve(__dirname, "../../packages/storage"),
       "@": path.resolve(__dirname, "src"),
     },
   },

@@ -7,7 +7,7 @@ import { match } from "ts-pattern";
 
 type NetworkStatusVariant = "online" | "offline";
 
-function StatusBadges({ showLiveBadge = true }: { showLiveBadge?: boolean }) {
+function StatusBadges() {
   const networkStatus = useNetworkStatus();
   const networkVariant: NetworkStatusVariant = networkStatus.isOnline
     ? "online"
@@ -37,30 +37,18 @@ function StatusBadges({ showLiveBadge = true }: { showLiveBadge?: boolean }) {
   return (
     <div className="flex items-center gap-2">
       {NetworkBadge}
-      {showLiveBadge && (
-        <Badge
-          variant="secondary"
-          className="cartoon-badge bg-yellow-100 text-black"
-        >
-          <Activity strokeWidth={3} className="w-4 h-4 me-1" />
-          <span className="font-body">Live</span>
-        </Badge>
-      )}
+      <Badge
+        variant="secondary"
+        className="cartoon-badge bg-yellow-100 text-black"
+      >
+        <Activity strokeWidth={3} className="w-4 h-4 me-1" />
+        <span className="font-body">Live</span>
+      </Badge>
     </div>
   );
 }
 
-interface HeaderProps {
-  title?: string;
-  subtitle?: string;
-  showStatusBadges?: boolean;
-}
-
-export function Header({
-  title = "NASDAQ Explorer",
-  subtitle = "Real-time Stock Explorer",
-  showStatusBadges = true,
-}: HeaderProps) {
+export function Header() {
   const { input, setInput, isPending } = useSearchWithURL();
   return (
     <div className="bg-background border-b-[2px] border-black sticky top-0 z-50">
@@ -77,9 +65,11 @@ export function Header({
             </div>
             <div>
               <h1 className="text-2xl md:text-3xl font-black text-foreground font-heading">
-                {title}
+                NASDAQ Explorer
               </h1>
-              <span className="cartoon-pill font-body">{subtitle}</span>
+              <span className="cartoon-pill font-body">
+                Real-time Stock Explorer
+              </span>
             </div>
           </div>
 
@@ -98,10 +88,12 @@ export function Header({
               />
             </div>
 
-            {showStatusBadges && <StatusBadges />}
+            <StatusBadges />
           </div>
         </div>
       </div>
     </div>
   );
 }
+
+Header.whyDidYouRender = true;

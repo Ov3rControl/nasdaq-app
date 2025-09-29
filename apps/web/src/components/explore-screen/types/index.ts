@@ -5,7 +5,3 @@ export interface StockItem {
   change: number;
   changePercent: number;
 }
-
-export type LoadingState =
-  | { tag: "fetching-next"; stocks: StockItem[] }
-  | { tag: "loading-more" };

@@ -65,3 +65,5 @@ export const StockCard = ({ stock }: StockCardProps) => {
     </Card>
   );
 };
+
+StockCard.whyDidYouRender = true;

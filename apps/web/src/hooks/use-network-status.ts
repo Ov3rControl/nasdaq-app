@@ -20,9 +20,21 @@ declare global {
     connection?: NetworkInformation;
   }
 }
+
 export function useNetworkStatus(): NetworkStatus {
-  const [networkStatus, setNetworkStatus] = useState<NetworkStatus>({
-    isOnline: typeof navigator !== "undefined" ? navigator.onLine : true,
+  // Initialize with current status to avoid re-render
+  const [networkStatus, setNetworkStatus] = useState<NetworkStatus>(() => {
+    if (typeof navigator === "undefined") {
+      return { isOnline: true };
+    }
+
+    const connection = navigator.connection;
+    return {
+      isOnline: navigator.onLine,
+      effectiveType: connection?.effectiveType,
+      downlink: connection?.downlink,
+      rtt: connection?.rtt,
+    };
   });
 
   useEffect(() => {
@@ -39,23 +51,19 @@ export function useNetworkStatus(): NetworkStatus {
       });
     };
 
-    const handleNetworkChange = () => updateNetworkStatus();
-
-    updateNetworkStatus();
-
-    window.addEventListener("online", handleNetworkChange);
-    window.addEventListener("offline", handleNetworkChange);
+    window.addEventListener("online", updateNetworkStatus);
+    window.addEventListener("offline", updateNetworkStatus);
 
     if (connection) {
-      connection.addEventListener("change", handleNetworkChange);
+      connection.addEventListener("change", updateNetworkStatus);
     }
 
     return () => {
-      window.removeEventListener("online", handleNetworkChange);
-      window.removeEventListener("offline", handleNetworkChange);
+      window.removeEventListener("online", updateNetworkStatus);
+      window.removeEventListener("offline", updateNetworkStatus);
 
       if (connection) {
-        connection.removeEventListener("change", handleNetworkChange);
+        connection.removeEventListener("change", updateNetworkStatus);
       }
     };
   }, []);

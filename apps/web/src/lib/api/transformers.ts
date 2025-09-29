@@ -1,9 +1,6 @@
 import type { PolygonTicker } from "./types";
 import type { StockItem } from "@/components/explore-screen/types";
 
-/**
- * Normalize search input just in case prob we won't need it
- */
 export function normalizeSearch(search?: string): string | undefined {
   const trimmed = search?.trim();
   return trimmed || undefined;
@@ -23,7 +20,6 @@ export function extractCursor(nextUrl?: string | null): string | undefined {
 export function safeCursor(cursor?: string): string | undefined {
   if (!cursor) return undefined;
 
-  // If a full URL was accidentally passed as cursor, extract the actual cursor
   if (/https?:\/\//i.test(cursor)) {
     return extractCursor(cursor);
   }
@@ -48,9 +44,6 @@ export function deriveMetrics(ticker: string): {
   return { price, change, changePercent };
 }
 
-/**
- * Transform Polygon ticker data to our StockItem format
- */
 export function transformToStockItem(ticker: PolygonTicker): StockItem {
   const metrics = deriveMetrics(ticker.ticker);
   return {
@@ -62,9 +55,6 @@ export function transformToStockItem(ticker: PolygonTicker): StockItem {
   };
 }
 
-/**
- * Transform array of Polygon tickers to StockItems
- */
 export function transformToStockItems(tickers: PolygonTicker[]) {
   return tickers.map(transformToStockItem);
 }

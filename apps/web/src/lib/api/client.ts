@@ -26,8 +26,9 @@ export async function makeRequest(
       try {
         const errorBody = (await response.json()) as { error?: string };
         errorMessage = errorBody.error;
-      } catch {
-        errorMessage = undefined;
+      } catch (parseError) {
+        console.warn("Failed to parse error response:", parseError);
+        errorMessage = response.statusText || "Request failed";
       }
 
       throw PolygonApiError.fromResponse(response.status, errorMessage);

@@ -27,5 +27,3 @@ export function tickersQueryOptions(search: string = "") {
     },
   });
 }
-
-export const stocksInfiniteQueryOptions = tickersQueryOptions;

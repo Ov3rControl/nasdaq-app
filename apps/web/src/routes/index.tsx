@@ -1,9 +1,5 @@
 import { useEffect } from "react";
-import {
-  createFileRoute,
-  useNavigate,
-  useRouter,
-} from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { SplashScreen } from "@/components/splash-screen";
 import { useQueryClient } from "@tanstack/react-query";
 import { tickersQueryOptions } from "@/lib/stocks-query";
@@ -16,7 +12,6 @@ export const Route = createFileRoute("/")({
 
 function SplashRoute() {
   const navigate = useNavigate({ from: "/" });
-  const router = useRouter();
   const qc = useQueryClient();
 
   useEffect(() => {
@@ -36,8 +31,9 @@ function SplashRoute() {
     return () => {
       isActive = false;
       window.clearTimeout(timer);
+      qc.cancelQueries({ queryKey: ["tickers"] });
     };
-  }, [navigate, qc, router]);
+  }, [navigate, qc]);
 
   return <SplashScreen />;
 }
