@@ -7,6 +7,7 @@ import { useInfiniteScroll } from "@/hooks/use-infinite-scroll";
 import { tickersQueryOptions } from "@/lib/stocks-query";
 import { showErrorToast } from "@/lib/toast-utils";
 import type { LoadingState } from "../types";
+import { useSearch } from "@tanstack/react-router";
 
 const SKELETON_COUNT = 12;
 
@@ -25,11 +26,8 @@ function EmptyState() {
   );
 }
 
-interface StockGridProps {
-  query: string;
-}
-
-export function StockGrid({ query }: StockGridProps) {
+export function StockGrid() {
+  const { q: query } = useSearch({ from: "/explore" });
   const lastErrorRef = useRef<Error | null>(null);
 
   const {
@@ -78,12 +76,8 @@ export function StockGrid({ query }: StockGridProps) {
     .otherwise(() => (
       <>
         <div className={gridClassName}>
-          {stocks.map((stock, index) => (
-            <StockCard
-              key={`${stock.ticker}-${index}`}
-              stock={stock}
-              index={index}
-            />
+          {stocks.map((stock) => (
+            <StockCard key={stock.ticker} stock={stock} />
           ))}
         </div>
 
@@ -116,7 +110,6 @@ function LoadingIndicator({
   onLoadMore?: () => void;
 }) {
   return match(state)
-    .with({ tag: "idle" }, () => null)
     .with({ tag: "loading-more" }, () => (
       <div className="flex justify-center py-12">
         <div className="flex space-x-2">

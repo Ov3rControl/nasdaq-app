@@ -1,33 +1,39 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
-import tailwindcss from '@tailwindcss/vite'
-import path from 'node:path'
-import { fileURLToPath } from 'node:url'
-import { tanstackRouter } from '@tanstack/router-plugin/vite'
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+import tailwindcss from "@tailwindcss/vite";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+import { tanstackRouter } from "@tanstack/router-plugin/vite";
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url))
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [
     tanstackRouter({
-      target: 'react',
+      target: "react",
       autoCodeSplitting: true,
     }),
     react({
       babel: {
-        plugins: [['babel-plugin-react-compiler']],
+        plugins: [["babel-plugin-react-compiler"]],
       },
     }),
     tailwindcss(),
   ],
   resolve: {
     alias: {
-      '@repo/core': path.resolve(__dirname, '../../packages/core'),
-      '@repo/api': path.resolve(__dirname, '../../packages/api'),
-      '@repo/data': path.resolve(__dirname, '../../packages/data'),
-      '@repo/storage': path.resolve(__dirname, '../../packages/storage'),
-      '@': path.resolve(__dirname, 'src'),
+      "@repo/core": path.resolve(__dirname, "../../packages/core"),
+      "@repo/api": path.resolve(__dirname, "../../packages/api"),
+      "@repo/data": path.resolve(__dirname, "../../packages/data"),
+      "@repo/storage": path.resolve(__dirname, "../../packages/storage"),
+      "@": path.resolve(__dirname, "src"),
     },
   },
-})
+  test: {
+    globals: true,
+    environment: "jsdom",
+    setupFiles: ["./vitest.setup.ts"],
+    css: true,
+  },
+});

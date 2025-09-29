@@ -115,6 +115,10 @@ body {
   font-family: var(--font-body);
 }
 
+.list-item {
+  content-visibility: auto;
+  contain-intrinsic-size: 280px 1px;
+}
 /* Apply retro fonts */
 .font-heading {
   font-family: var(--font-heading) !important;
@@ -497,29 +501,23 @@ html:active-view-transition-type(fade-push) {
   }
 }
 
-/* Retro Toast Styles */
-.retro-toast {
-  @apply bg-white border-[3px] border-black rounded-lg p-4 shadow-lg font-body;
-  animation: bounce-in 0.3s ease-out;
-}
-
-.retro-toast-error {
-  @apply bg-red-50 border-red-500;
-}
-
-.retro-toast-warning {
-  @apply bg-yellow-50 border-yellow-500;
-}
-
-.retro-toast-success {
-  @apply bg-green-50 border-green-500;
-}
-
-/* Toast container positioning */
+/* Sonner toast styling */
 [data-sonner-toaster] {
   @apply !top-4 !right-4;
 }
 
-[data-sonner-toaster] [data-sonner-toast] {
-  @apply !bg-transparent !shadow-none !border-none !p-0;
+[data-sonner-toast] {
+  @apply !bg-white !border-[3px] !border-black !rounded-lg !shadow-lg !font-body;
+}
+
+[data-sonner-toast][data-type="error"] {
+  @apply !bg-red-50 !border-red-500;
+}
+
+[data-sonner-toast][data-type="warning"] {
+  @apply !bg-yellow-50 !border-yellow-500;
+}
+
+[data-sonner-toast][data-type="success"] {
+  @apply !bg-green-50 !border-green-500;
 }

@@ -1,12 +1,7 @@
-import { Suspense, lazy } from "react";
+import { Suspense } from "react";
 import { createRootRouteWithContext, Outlet } from "@tanstack/react-router";
 import type { QueryClient } from "@tanstack/react-query";
-import { Toaster } from "@/components/ui/toaster";
-
-const RouterDevtools = lazy(async () => {
-  const mod = await import("@tanstack/react-router-devtools");
-  return { default: mod.TanStackRouterDevtools };
-});
+import { Toaster } from "sonner";
 
 const RootLayout = () => (
   <>
@@ -14,11 +9,6 @@ const RootLayout = () => (
       <Outlet />
     </Suspense>
     <Toaster />
-    {import.meta.env.DEV ? (
-      <Suspense fallback={null}>
-        <RouterDevtools />
-      </Suspense>
-    ) : null}
   </>
 );
 

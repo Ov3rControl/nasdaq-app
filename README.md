@@ -4,25 +4,37 @@ A modern, real-time NASDAQ stock explorer built with React, TypeScript, and Vite
 
 - Splash screen has 3000ms delay for demo but in production splash screen chunk is loaded alone to appear instant and it pre-fetches the explore screen data to appear instant as well
 
+## Initial architecture descussions
+# When I looked at the task we have 3 main features
+- Splash screen -> I saw opportunity for bundle splitting because you normally want landing page to be instant and fast, then explore screen is loaded in parallel with data pre-fetched
+- Explore screen -> Main app functionality 
+   - BE Search while typing -> normal use case would be a 300ms (usually less but it depends) debounce after last key stroke
+      - If we want to go extra we can have deferred local search (we search our query cache or IDB if we have presisted data if not found we go to BE) but I found it not ideal because of how search works in Polygon
+   - Stock Grid -> to show the stocks ideally it we want virtualization but it was a bit a stretch for our use case (if we want extra reusability could use LegendList v2 for web and RN)
+   
+# Lib choices
+- server-state maanagement tanstack query was an easy choice for -> infinte loading, in memory caching (also presistense if we wanted), also works fine if we want WS realtime will just batch update the query cache or maybe RTQ Query? 
+- client-state management -> React local state was enough
+- routing -> tanstack router not needed but i just wanted to try it
+- styling -> tailwind v4 with shadcn ui components (no brainer also we can fight about using base-ui instead)
+- testing -> vitest and react testing library
+- linting -> eslint with typescript and react rules (But I would go for biomejs or ultracite)
+- zod -> no brainer for data validation (But Usually I would do Automatic generation from BE swagger spec) and treat my API as an SDK (seperate package for web and RN)
+- ts-pattern -> for exhaustive matching and better code organization (again just trying things out)
+
 ## 🚀 Features
 
-- **Real-time Stock Data**: Browse and search NASDAQ stocks with live data
 - **Infinite Scroll**: Seamless pagination with automatic loading
 - **Search Functionality**: Search stocks by symbol or company name
 - **Responsive Design**: Optimized for desktop and mobile devices
-- **Network Status**: Real-time network connectivity indicator
-- **Performance Optimized**: Built with React 19, Vite, and modern optimization techniques
-- **Smooth Animations**: Polished UI with loading states and transitions
+- **Bundle splitting and pre-fetching**: For instant loading
+- **Caching**: API responses are cached to reduce redundant requests
+- **Error Handling**: Graceful error handling and retry mechanism
+- **Rate Limiting**: Graceful handling of rate limit errors with user feedback and retry after 15 seconds
+- **RTL Support**: Respect RTL when doing UI
+- **Unit Tests**: Basic unit tests for critical components
 
-## 🛠️ Tech Stack
 
-- **Frontend**: React 19, TypeScript, Vite
-- **Styling**: Tailwind CSS 4, Radix UI components
-- **State Management**: TanStack Query (React Query)
-- **Routing**: TanStack Router
-- **Icons**: Lucide React
-- **Build Tool**: Vite with React Compiler
-- **Package Manager**: PNPM
 
 ## 📋 Prerequisites
 
@@ -52,26 +64,6 @@ Before running this project, make sure you have:
 4. **Open your browser**
    Navigate to `http://localhost:5173` to view the application
 
-## 📁 Project Structure
-
-```
-nasdaq-app/
-├── apps/
-│   └── web/                 # Main React application
-│       ├── src/
-│       │   ├── components/  # React components
-│       │   ├── hooks/       # Custom React hooks
-│       │   ├── lib/         # Utility functions and configurations
-│       │   ├── routes/      # TanStack Router routes
-│       │   └── types/       # TypeScript type definitions
-│       ├── public/          # Static assets
-│       └── package.json     # Web app dependencies
-├── packages/                # Shared packages (currently empty)
-│   ├── api/                 # Future API package
-│   ├── core/                # Future core utilities
-│   └── storage/             # Future storage utilities
-└── package.json             # Root package configuration
-```
 
 ## 🔧 Available Scripts
 
@@ -80,6 +72,7 @@ nasdaq-app/
 - `pnpm dev` - Start the development server
 - `pnpm build` - Build the application for production
 - `pnpm test` - Run tests across all packages
+- `pnpm --filter web lint` - Lint web app
 
 ### Web App Specific Commands
 
@@ -89,81 +82,3 @@ Navigate to `apps/web/` and run:
 - `pnpm build` - Build for production
 - `pnpm preview` - Preview production build
 - `pnpm lint` - Run ESLint
-
-## 🎨 Key Components
-
-- **ExploreScreen**: Main stock browsing interface with search and infinite scroll
-- **StockCard**: Individual stock display component
-- **SplashScreen**: Application loading screen
-- **PerformanceMonitor**: Performance tracking component
-
-## 🔍 Features in Detail
-
-### Search & Filtering
-- Real-time search with debounced input
-- Search by stock symbol or company name
-- URL-synced search parameters
-
-### Performance Optimizations
-- React 19 with React Compiler enabled
-- Infinite scroll with intersection observer
-- Debounced search to reduce API calls
-- Optimized re-renders with proper memoization
-
-### Network Handling
-- Network status monitoring
-- Graceful offline handling
-- Error boundaries and fallback states
-
-## 🌐 Browser Support
-
-This application supports all modern browsers:
-- Chrome (latest)
-- Firefox (latest)
-- Safari (latest)
-- Edge (latest)
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## 📝 Development Notes
-
-- The project uses PNPM workspaces for monorepo management
-- React Compiler is enabled for automatic optimizations
-- Tailwind CSS 4 is used for styling with custom design tokens
-- The app follows modern React patterns with hooks and functional components
-
-## 🐛 Troubleshooting
-
-### Common Issues
-
-**Port already in use**
-```bash
-# Kill process on port 5173
-lsof -ti:5173 | xargs kill -9
-```
-
-**Dependencies not installing**
-```bash
-# Clear PNPM cache and reinstall
-pnpm store prune
-rm -rf node_modules
-pnpm install
-```
-
-**Build errors**
-```bash
-# Clean build and rebuild
-pnpm build --clean
-```
-
-## 📄 License
-
-This project is licensed under the ISC License.
-
----

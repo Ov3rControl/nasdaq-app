@@ -2,7 +2,7 @@ import { Card, CardContent } from "@/components/ui/card";
 
 export function StockCardSkeleton() {
   return (
-    <Card className="cartoon-card overflow-hidden h-full">
+    <Card className="list-item cartoon-card overflow-hidden h-full">
       <CardContent className="p-5 flex h-full flex-col justify-between">
         <div className="flex items-start justify-between mb-3">
           <div className="flex-1">

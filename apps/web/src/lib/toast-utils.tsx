@@ -1,5 +1,4 @@
-import { toast } from "@/hooks/use-toast";
-import { ToastAction } from "@/components/ui/toast";
+import { toast } from "sonner";
 
 export function showErrorToast(message: string, error?: Error) {
   const isRateLimit =
@@ -7,20 +6,15 @@ export function showErrorToast(message: string, error?: Error) {
     message.toLowerCase().includes("rate limit");
 
   if (isRateLimit) {
-    toast({
-      variant: "warning",
-      title: "Rate limit reached",
+    toast.warning("Rate limit reached", {
       description:
         "Please wait before loading more stocks. Try again in 15 seconds.",
       duration: 15000,
     });
   } else {
-    toast({
-      variant: "destructive",
-      title: "Error",
+    toast.error("Error", {
       description: message,
       duration: 10000,
-      action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
     });
   }
 }

@@ -1,20 +1,18 @@
-import { memo } from "react";
 import { TrendingUp, TrendingDown } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { formatCurrency } from "@/lib/utils";
-import type { StockItem } from "@/types/stock";
+import type { StockItem } from "..";
 
 interface StockCardProps {
   stock: StockItem;
-  index: number;
 }
 
-export const StockCard = memo(function StockCard({ stock }: StockCardProps) {
+export const StockCard = ({ stock }: StockCardProps) => {
   const isGain = stock.change >= 0;
 
   return (
-    <Card className="cartoon-card h-full overflow-hidden">
+    <Card className="list-item cartoon-card h-full overflow-hidden">
       <CardContent className="p-5 flex h-full flex-col justify-between">
         <div className="flex items-start justify-between mb-3">
           <div className="flex-1">
@@ -66,4 +64,4 @@ export const StockCard = memo(function StockCard({ stock }: StockCardProps) {
       </CardContent>
     </Card>
   );
-});
+};
