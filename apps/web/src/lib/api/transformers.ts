@@ -1,5 +1,5 @@
-import type { StockItem } from "@/types/stock";
 import type { PolygonTicker } from "./types";
+import type { StockItem } from "@/components/explore-screen/types";
 
 /**
  * Normalize search input just in case prob we won't need it
@@ -65,6 +65,6 @@ export function transformToStockItem(ticker: PolygonTicker): StockItem {
 /**
  * Transform array of Polygon tickers to StockItems
  */
-export function transformToStockItems(tickers: PolygonTicker[]): StockItem[] {
+export function transformToStockItems(tickers: PolygonTicker[]) {
   return tickers.map(transformToStockItem);
 }
